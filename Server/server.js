@@ -3,7 +3,7 @@ require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const jwt = require('jsonwebtoken');
-const authRoutes = require('./routes/authentication')
+const authRoutes = require('./routes/auth')
 const { verifyToken } = require('./middlewares/authJWT')
 const dbTestRoutes = require('./routes/dbTestRoute')
 const apiTest = require('./routes/apiTestRoute')
@@ -12,8 +12,6 @@ const app = express()
 
 app.use(express.json()) // parse json
 app.use(cors())
-// app.use('/api', apiTest)
-// app.use('/api', dbTestRoutes) // 把 dbTestRoutes 里所有路由都挂载到 /api 下
 app.use('/auth', authRoutes); // 认证路由（登录、注册）
 
 
@@ -26,6 +24,12 @@ const testUser = {
 app.get("/", (req, res) => {
     res.send("Welcome to the backend API!");
 });
+
+const db = require("./models/db");
+db.execute("SELECT 1")
+  .then(() => console.log("✅ Database connected"))
+  .catch(err => console.error("❌ Database connection failed", err));
+
 
 // JWT testing - generate jwt
 app.get('/generate-jwt', (req, res) => {
@@ -47,6 +51,9 @@ app.get('/test-jwt', (req, res) => {
         res.json({ message: "JWT is valid!", user: decoded });
     });
 });
+
+
+// WebSocket
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
