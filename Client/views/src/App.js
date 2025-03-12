@@ -1,21 +1,22 @@
+import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/home";
-import Register from "./pages/register";
-import Login from "./pages/login";
-import AdminDashboard from "./pages/AdminDashboard";
+import ProductList from "./pages/ProductBrowse";
 import StaffDashboard from "./pages/StaffPanel";
-import CustomerDashboard from "./pages/ProductBrowse";
+import Home from "./pages/home";
+import Login from "./pages/login";
+import Register from "./pages/register";
 
 function App() {
+    const [forceRefresh, setForceRefresh] = useState(0); // ✅ Add refresh state
+
     return (
         <Router>
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/admin" element={<AdminDashboard />} />
-                <Route path="/staff" element={<StaffDashboard />} />
-                <Route path="/customer" element={<CustomerDashboard />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/productlists" element={<ProductList forceRefresh={forceRefresh} />} />
+                <Route path="/staff" element={<StaffDashboard setForceRefresh={setForceRefresh} />} />
             </Routes>
         </Router>
     );
