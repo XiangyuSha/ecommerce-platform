@@ -7,13 +7,15 @@ const authRoutes = require('./routes/auth')
 const { verifyToken } = require('./middlewares/authJWT')
 const dbTestRoutes = require('./routes/dbTestRoute')
 const apiTest = require('./routes/apiTestRoute')
+const productsRouter = require("./routes/products");
+
 
 const app = express()
 
 app.use(express.json()) // parse json
-app.use(cors())
+app.use(cors({ origin: "*", methods: "GET,POST,PUT,DELETE" }));
 app.use('/auth', authRoutes); // 认证路由（登录、注册）
-
+app.use("/", productsRouter);
 
 const testUser = {
     id: 1,
@@ -27,8 +29,8 @@ app.get("/", (req, res) => {
 
 const db = require("./models/db");
 db.execute("SELECT 1")
-  .then(() => console.log("✅ Database connected"))
-  .catch(err => console.error("❌ Database connection failed", err));
+  .then(() => console.log("Database connected!"))
+  .catch(err => console.error("Database connection failed.", err));
 
 
 // JWT testing - generate jwt

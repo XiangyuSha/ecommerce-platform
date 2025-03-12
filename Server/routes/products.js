@@ -1,54 +1,80 @@
-const express = require('express');
-const db = require('../models/db');
-const { verifyToken } = require('../middlewares/authJWT');
-const { authorizeRoles } = require('../middlewares/authRBAC');
+const express = require("express");
+const db = require("../models/db");
+const { verifyToken } = require("../middlewares/authJWT");
+const { authorizeRoles } = require("../middlewares/authRBAC");
 
 const router = express.Router();
 
-// 添加产品（仅 Staff）
-router.post('/', verifyToken, authorizeRoles('Staff'), async (req, res) => {
-    const { name, price, quantity } = req.body;
+/** Get All Products (Public) */
+router.get("/products", async (req, res) => {
+  try {
+    const [products] = await db.execute("SELECT * FROM Products");
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ error: "Database error", details: error.message });
+  }
+});
+
+
+// 更新库存（只允许 Staff 或 Admin）
+router.put("/products/:id", verifyToken, authorizeRoles(2, 3), async (req, res) => {
+    const { stock_quantity } = req.body;
+    const productId = req.params.id;
+
     try {
-        await db.execute('INSERT INTO Products (name, price, quantity) VALUES (?, ?, ?)', 
-            [name, price, quantity]);
-        res.status(201).json({ message: 'Product added' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+        const [result] = await db.execute(
+            "UPDATE Products SET stock_quantity = ? WHERE id = ?",
+            [stock_quantity, productId]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+
+        res.json({ message: "✅ Stock updated successfully" });
+    } catch (error) {
+        console.error("❌ Error updating stock:", error);
+        res.status(500).json({ error: "Database error" });
     }
 });
 
-// 获取所有产品（所有用户）
-router.get('/', verifyToken, async (req, res) => {
-    try {
-        // await 等待查询结果，然后再执行下一步代码 
-        // Deconstruct the assignment and get the query result directly
-        const [products] = await db.execute('SELECT * FROM Products'); 
-        res.json(products);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+/** Add a New Product (Only Staff) */
+router.post("/products", verifyToken, authorizeRoles(2, 3), async (req, res) => {
+    const { name, price, stock_quantity, image_url } = req.body;
 
-// 更新产品（仅 Staff）
-router.put('/:id', verifyToken, authorizeRoles('Staff'), async (req, res) => {
-    const { price, quantity } = req.body;
     try {
-        await db.execute('UPDATE Products SET price = ?, quantity = ? WHERE id = ?', 
-            [price, quantity, req.params.id]);
-        res.json({ message: 'Product updated' });
+      await db.execute(
+        "INSERT INTO Products (name, price, stock_quantity, image_url) VALUES (?, ?, ?, ?)",
+        [
+          name,
+          price,
+          stock_quantity || 0, // Default to 0 if not provided
+          image_url || "https://static.vecteezy.com/system/resources/previews/002/186/712/non_2x/new-product-tag-sticker-free-vector.jpg"
+        ]
+      );
+      res.status(201).json({ message: "✅ Product added successfully" });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+      console.error("❌ Error adding product:", err);
+      res.status(500).json({ error: err.message });
     }
-});
+  }
+);
 
-// 删除产品（仅 Admin）
-router.delete('/:id', verifyToken, authorizeRoles('Admin'), async (req, res) => {
+/** 🗑️ Delete a Product (Only Admin) */
+router.delete("/products/:id", verifyToken, authorizeRoles("Admin"), async (req, res) => {
     try {
-        await db.execute('DELETE FROM Products WHERE id = ?', [req.params.id]);
-        res.json({ message: 'Product deleted' });
+      const [result] = await db.execute("DELETE FROM Products WHERE id = ?", [req.params.id]);
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: "❌ Product not found" });
+      }
+
+      res.json({ message: "✅ Product deleted successfully" });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+      console.error("❌ Error deleting product:", err);
+      res.status(500).json({ error: err.message });
     }
-});
+  }
+);
 
 module.exports = router;
