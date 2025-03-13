@@ -24,10 +24,20 @@ app.get("/", (req, res) => {
     res.send("Welcome to the backend API!");
 });
 
-const db = require("./models/db");
-db.execute("SELECT 1")
-  .then(() => console.log("Database connected!"))
-  .catch(err => console.error("Database connection failed.", err));
+// const db = require("./models/db");
+// db.execute("SELECT 1")
+//   .then(() => console.log("Database connected!"))
+//   .catch(err => console.error("Database connection failed.", err));
+
+const { executeQuery } = require("./models/db");
+(async () => {
+    try {
+        await executeQuery("SELECT 1");
+        console.log("Database connected!");
+    } catch (err) {
+        console.error("Database connection failed.", err);
+    }
+})();
 
 
 /* JWT testing - generate jwt
