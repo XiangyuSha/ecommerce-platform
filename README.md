@@ -101,12 +101,6 @@ npm start
 
 The API is available at  `https://ecommerce-platform-cyif.onrender.com`
 
-### Status ###
-
-GET `/status`
-
-Returns the status of the API.
-
 ### List of Products ###
 
 GET `/products`
