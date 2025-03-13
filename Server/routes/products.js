@@ -1,5 +1,5 @@
 const express = require("express");
-const db = require("../models/db");
+const { executeQuery } = require("../models/db");
 const { verifyToken } = require("../middlewares/authJWT");
 const { authorizeRoles } = require("../middlewares/authRBAC");
 
@@ -8,7 +8,7 @@ const router = express.Router();
 /** Get All Products (Public) */
 router.get("/products", async (req, res) => {
   try {
-    const [products] = await db.execute("SELECT * FROM Products");
+    const [products] = await executeQuery("SELECT * FROM Products");
     res.json(products);
   } catch (error) {
     res.status(500).json({ error: "Database error", details: error.message });
@@ -22,7 +22,7 @@ router.put("/products/:id", verifyToken, authorizeRoles(2, 3), async (req, res) 
     const productId = req.params.id;
 
     try {
-        const [result] = await db.execute(
+        const [result] = await executeQuery(
             "UPDATE Products SET stock_quantity = ? WHERE id = ?",
             [stock_quantity, productId]
         );
@@ -43,7 +43,7 @@ router.post("/products", verifyToken, authorizeRoles(2, 3), async (req, res) => 
     const { name, price, stock_quantity, image_url } = req.body;
 
     try {
-      await db.execute(
+      await executeQuery(
         "INSERT INTO Products (name, price, stock_quantity, image_url) VALUES (?, ?, ?, ?)",
         [
           name,
@@ -63,7 +63,7 @@ router.post("/products", verifyToken, authorizeRoles(2, 3), async (req, res) => 
 /** Delete a Product (Only Admin, Role_id = 2) */
 router.delete("/products/:id", verifyToken, authorizeRoles(2), async (req, res) => {
     try {
-      const [result] = await db.execute("DELETE FROM Products WHERE id = ?", [req.params.id]);
+      const [result] = await executeQuery("DELETE FROM Products WHERE id = ?", [req.params.id]);
 
       if (result.affectedRows === 0) {
         return res.status(404).json({ message: "Product not found" });

@@ -5,7 +5,6 @@ const cors = require('cors')
 const jwt = require('jsonwebtoken');
 const authRoutes = require('./routes/auth')
 const { verifyToken } = require('./middlewares/authJWT')
-const dbTestRoutes = require('./routes/dbTestRoute')
 const apiTest = require('./routes/apiTestRoute')
 const productsRouter = require("./routes/products");
 
