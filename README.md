@@ -13,6 +13,8 @@
 ## Web-URL
 https://ecommerce-platform-sha.vercel.app  
 
+Render's free tier can cause slow initial loading due to the cold start effect. If the backend service hasn't been accessed for a while, it may take 30-60 seconds to wake up.
+
 ---
 
 ## Introduction
@@ -203,8 +205,6 @@ Example
 ---
 
 ## Additional Notes
-Render's free tier can cause slow initial loading due to the cold start effect. If the backend service hasn't been accessed for a while, it may take 30-60 seconds to wake up.
-
 - Ensure the database is running before starting the backend.
 - The API uses JWT authentication; include the token in the `Authorization` header for protected routes.
 - User roles:
