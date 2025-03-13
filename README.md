@@ -1,11 +1,17 @@
 # E-Commerce Platform API
 
 ## Table of Contents
-1. [Introduction](#introduction)
-2. [Setup Instructions](#development-environment-setup-instructions)
-3. [Running the Application](#running-the-application)
-4. [API Documentation](#api-documentation)
-5. [Additional Notes](#additional-notes)
+1. [Web App Link](#web-url)
+2. [Introduction](#introduction)
+3. [Setup Instructions](#development-environment-setup-instructions)
+4. [Running the Application](#running-the-application)
+5. [API Documentation](#api-documentation)
+6. [Additional Notes](#additional-notes)
+
+---
+
+## Web-URL
+https://ecommerce-platform-sha.vercel.app  
 
 ---
 
@@ -33,6 +39,13 @@ Security:
 Database:
 
 - MySQL
+
+Deployment:
+
+- Vercel for frontend
+- Render for backend
+- Aiven for cloud MySQL
+
 ---
 
 ## Development Environment Setup Instructions 
