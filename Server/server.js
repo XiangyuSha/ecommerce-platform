@@ -68,7 +68,7 @@ app.get('/test-jwt', (req, res) => {
 
 // WebSocket
 
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.DB_PORT || 5001;
 app.listen(PORT, () => {
     console.log(`Server is running on port: ${PORT}`);
 });
