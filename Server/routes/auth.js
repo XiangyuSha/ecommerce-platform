@@ -10,9 +10,13 @@ const router = express.Router();
 router.post('/register', async (req, res) => {
     const { email, password, role_id } = req.body;
 
+    if (!email || !password) {
+        return res.status(400).json({ message: 'Email and password are required' });
+    }
+
     try {
-        const [existingUsers] = await executeQuery('SELECT * FROM Users WHERE email = ?', [email]);
-        if (existingUsers.length > 0) {
+        const existingUsers = await executeQuery('SELECT * FROM Users WHERE email = ?', [email]);
+        if (existingUsers && existingUsers.length > 0) {
             return res.status(400).json({ message: 'Email already in use' });
         }
 
@@ -27,6 +31,7 @@ router.post('/register', async (req, res) => {
         res.status(201).json({ message: 'User registered successfully with role ID: ' + assignedRole });
 
     } catch (err) {
+        console.error("Error in register:", err);
         res.status(500).json({ error: err.message });
     }
 });
@@ -35,13 +40,23 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
+    if (!email || !password) {
+        return res.status(400).json({ message: 'Email and password are required' });
+    }
+
     try {
-        const [users] = await executeQuery('SELECT id, email, role_id, password_hash FROM Users WHERE email = ?', [email]);
-        if (users.length === 0) return res.status(401).json({ message: 'Invalid credentials' });
+        const users = await executeQuery('SELECT id, email, role_id, password_hash FROM Users WHERE email = ?', [email]);
+
+        if (!users || users.length === 0) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
 
         const user = users[0];
         const isMatch = await bcrypt.compare(password, user.password_hash);
-        if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
+
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
 
         // JWT Token
         const tokenJWT = generateToken({ id: user.id, email, role_id: user.role_id });
@@ -54,6 +69,7 @@ router.post('/login', async (req, res) => {
         });
 
     } catch (err) {
+        console.error("Error in login:", err);
         res.status(500).json({ error: err.message });
     }
 });
