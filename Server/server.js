@@ -17,10 +17,7 @@ app.use(cors({ origin: "*", methods: "GET,POST,PUT,DELETE" }));
 app.use('/auth', authRoutes); // 认证路由（登录、注册）
 app.use("/", productsRouter);
 
-const testUser = {
-    id: 1,
-    role: "Admin"
-};
+
 
 // Default path - Welcome letter
 app.get("/", (req, res) => {
@@ -33,7 +30,12 @@ db.execute("SELECT 1")
   .catch(err => console.error("Database connection failed.", err));
 
 
-// JWT testing - generate jwt
+/* JWT testing - generate jwt
+const testUser = {
+    id: 1,
+    role: "Admin"
+};
+
 app.get('/generate-jwt', (req, res) => {
     const token = jwt.sign(
         { id: testUser.id, role: testUser.role },
@@ -43,7 +45,6 @@ app.get('/generate-jwt', (req, res) => {
     res.json({ token });
 });
 
-// test jwt
 app.get('/test-jwt', (req, res) => {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) return res.status(401).json({ message: 'Access denied. No token provided.' });
@@ -53,7 +54,7 @@ app.get('/test-jwt', (req, res) => {
         res.json({ message: "JWT is valid!", user: decoded });
     });
 });
-
+*/
 
 // WebSocket
 

@@ -16,7 +16,7 @@ router.get("/products", async (req, res) => {
 });
 
 
-// 更新库存（只允许 Staff 或 Admin）
+// Update inventory（only Staff or Admin）
 router.put("/products/:id", verifyToken, authorizeRoles(2, 3), async (req, res) => {
     const { stock_quantity } = req.body;
     const productId = req.params.id;
@@ -31,14 +31,14 @@ router.put("/products/:id", verifyToken, authorizeRoles(2, 3), async (req, res) 
             return res.status(404).json({ message: "Product not found" });
         }
 
-        res.json({ message: "✅ Stock updated successfully" });
+        res.json({ message: "Stock updated successfully" });
     } catch (error) {
-        console.error("❌ Error updating stock:", error);
+        console.error("Error updating stock:", error);
         res.status(500).json({ error: "Database error" });
     }
 });
 
-/** Add a New Product (Only Staff) */
+/** Add a New Product (Staff and admin) */
 router.post("/products", verifyToken, authorizeRoles(2, 3), async (req, res) => {
     const { name, price, stock_quantity, image_url } = req.body;
 
@@ -52,26 +52,26 @@ router.post("/products", verifyToken, authorizeRoles(2, 3), async (req, res) => 
           image_url || "https://static.vecteezy.com/system/resources/previews/002/186/712/non_2x/new-product-tag-sticker-free-vector.jpg"
         ]
       );
-      res.status(201).json({ message: "✅ Product added successfully" });
+      res.status(201).json({ message: "Product added successfully" });
     } catch (err) {
-      console.error("❌ Error adding product:", err);
+      console.error("Error adding product:", err);
       res.status(500).json({ error: err.message });
     }
   }
 );
 
-/** 🗑️ Delete a Product (Only Admin) */
-router.delete("/products/:id", verifyToken, authorizeRoles("Admin"), async (req, res) => {
+/** Delete a Product (Only Admin, Role_id = 2) */
+router.delete("/products/:id", verifyToken, authorizeRoles(2), async (req, res) => {
     try {
       const [result] = await db.execute("DELETE FROM Products WHERE id = ?", [req.params.id]);
 
       if (result.affectedRows === 0) {
-        return res.status(404).json({ message: "❌ Product not found" });
+        return res.status(404).json({ message: "Product not found" });
       }
 
-      res.json({ message: "✅ Product deleted successfully" });
+      res.json({ message: "Product deleted successfully" });
     } catch (err) {
-      console.error("❌ Error deleting product:", err);
+      console.error("Error deleting product:", err);
       res.status(500).json({ error: err.message });
     }
   }

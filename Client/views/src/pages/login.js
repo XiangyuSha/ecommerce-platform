@@ -39,10 +39,10 @@ const Login = () => {
       });
 
       setTimeout(() => {
-        if (response.data.role_id === 4) navigate("/productlists");
-        else if (response.data.role_id === 3) navigate("/staff");
-        else if (response.data.role_id === 2) navigate("/admin");
-      }, 1500); // 1.5秒后跳转
+        if (response.data.role_id === 4) navigate("/product-lists");
+        else if (response.data.role_id === 3) navigate("/staff-dashboard");
+        else if (response.data.role_id === 2) navigate("/admin-dashboard");
+      }, 1500); // 1.5 seconds navigate
     } catch (error) {
       setSnackbar({
         open: true,
@@ -99,7 +99,7 @@ const Login = () => {
         open={snackbar.open}
         autoHideDuration={3000}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }} // ✅ 让 Snackbar 居中
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <Alert
           onClose={() => setSnackbar({ ...snackbar, open: false })}

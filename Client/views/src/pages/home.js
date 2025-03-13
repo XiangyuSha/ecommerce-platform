@@ -1,63 +1,48 @@
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Container, Typography, Box, Grid, Card, CardContent } from "@mui/material";
+import { Button, Box, Typography } from "@mui/material";
 
-const Home = () => {
+const HomePage = () => {
     const navigate = useNavigate();
 
     return (
-        <Container maxWidth="md">
-            {/* 主页标题 */}
-            <Typography variant="h3" align="center" gutterBottom>
-                Welcome to Our Store
-            </Typography>
-            <Typography variant="h6" align="center" color="textSecondary" paragraph>
-                Browse our products, manage inventory, or place an order.
-            </Typography>
-
-            {/* 快捷操作按钮 */}
-            <Box display="flex" justifyContent="center" gap={2} my={3}>
-                <Button variant="contained" color="primary" onClick={() => navigate("/productlists")}>
-                    View Products
+        <Box sx={{
+                textAlign: "center",
+                padding: "40px",
+                minHeight: "120vh",
+                backgroundImage: "url('https://blog-frontend.envato.com/cdn-cgi/image/width=2560,quality=75,format=auto/uploads/sites/2/2022/04/E-commerce-App-JPG-File-scaled.jpg')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                color: "white"
+            }}
+        >
+            {/* sign in and register button */}
+            <Box sx={{ position: "absolute", top: 20, right: 20 }}>
+                <Button
+                    variant="contained"
+                    sx={{ marginRight: 1 }}
+                    onClick={() => navigate("/login")}
+                >
+                    Sign In
                 </Button>
-                <Button variant="contained" color="secondary" onClick={() => navigate("/staff")}>
-                    Staff Panel
-                </Button>
-                <Button variant="contained" color="success" onClick={() => navigate("/admin")}>
-                    Admin Dashboard
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => navigate("/register")}
+                >
+                    Register
                 </Button>
             </Box>
 
-            {/* 主页卡片布局 */}
-            <Grid container spacing={3} justifyContent="center">
-                <Grid item xs={12} sm={4}>
-                    <Card sx={{ textAlign: "center", p: 2 }}>
-                        <CardContent>
-                            <Typography variant="h5">🛒 Products</Typography>
-                            <Typography color="textSecondary">Browse and purchase products.</Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-
-                <Grid item xs={12} sm={4}>
-                    <Card sx={{ textAlign: "center", p: 2 }}>
-                        <CardContent>
-                            <Typography variant="h5">👨‍💼 Staff</Typography>
-                            <Typography color="textSecondary">Manage product inventory.</Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-
-                <Grid item xs={12} sm={4}>
-                    <Card sx={{ textAlign: "center", p: 2 }}>
-                        <CardContent>
-                            <Typography variant="h5">⚙️ Admin</Typography>
-                            <Typography color="textSecondary">Manage users and settings.</Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-            </Grid>
-        </Container>
+            {/* Title */}
+            <Typography variant="h3" sx={{ fontWeight: "bold", marginBottom: 2 }}>
+                Welcome to Our Store
+            </Typography>
+            <Typography variant="h6" sx={{ marginBottom: 3 }}>
+                Sign in to browse and purchase the latest items.
+            </Typography>
+        </Box>
     );
 };
 
-export default Home;
+export default HomePage;

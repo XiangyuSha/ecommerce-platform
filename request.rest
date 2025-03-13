@@ -1,8 +1,0 @@
-### Login (Get JWT Token)
-GET http://localhost:5001/generate-jwt
-
-
-
-### 验证 JWT 是否有效
-GET http://localhost:5001/test-jwt
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzQxNTY3MjM1LCJleHAiOjE3NDE1NzA4MzV9.8bz_MF0gxACsU_gEF8RsfcxQR4LzfnLl6a_RCv2EULE

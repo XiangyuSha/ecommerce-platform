@@ -18,6 +18,7 @@ const StaffDashboard = ({ setForceRefresh }) => {
     fetchProducts();
   }, []);
 
+  // Get all products
   const fetchProducts = () => {
     axios
       .get(`${API_BASE_URL}/products`)
@@ -25,33 +26,34 @@ const StaffDashboard = ({ setForceRefresh }) => {
       .catch((err) => console.error("Error fetching products:", err));
   };
 
+  // Update product
   const updateStock = (id) => {
     axios.put(`${API_BASE_URL}/products/${id}`, { stock_quantity: newStock[id] || 0 }, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       })
       .then(() => {
-        alert("✅ Stock updated successfully!");
-        setForceRefresh((prev) => prev + 1); // ✅ Notify the customer product list to update
-        fetchProducts(); // ✅ Immediately update staff view
+        alert("Stock updated successfully!");
+        setForceRefresh((prev) => prev + 1); // Notify the customer product list to update
+        fetchProducts(); // Immediately update staff view
       })
-      .catch((err) => console.error("❌ Error updating stock:", err));
+      .catch((err) => console.error("Error updating stock:", err));
   };
 
+  // Add product
   const addProduct = () => {
     axios
       .post(`${API_BASE_URL}/products`, {
-        ...newProduct,
-        image_url: newProduct.image_url || "https://static.vecteezy.com/system/resources/previews/002/186/712/non_2x/new-product-tag-sticker-free-vector.jpg"
+        ...newProduct, image_url: newProduct.image_url || "https://static.vecteezy.com/system/resources/previews/002/186/712/non_2x/new-product-tag-sticker-free-vector.jpg"
       }, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       })
       .then(() => {
-        alert("✅ Product added successfully!");
+        alert("Product added successfully!");
         setNewProduct({ name: "", description: "", price: "", stock_quantity: "", image_url: "" });
-        setForceRefresh((prev) => prev + 1); // ✅ Notify customer product list
-        fetchProducts(); // ✅ Immediately update staff view
+        setForceRefresh((prev) => prev + 1); // Notify customer product list
+        fetchProducts(); // Immediately update staff view
       })
-      .catch((err) => console.error("❌ Error adding product:", err));
+      .catch((err) => console.error("Error adding product:", err));
   };
 
   return (
